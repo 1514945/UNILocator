@@ -1,8 +1,10 @@
 package com.example.armani.unilocator.fragments;
 
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
@@ -24,6 +27,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback {
 
 
     private GoogleMap mMap; //This is the actual map that i can use
+    private MarkerOptions userMarker;
 
     public MainFragment() {
         // Required empty public constructor
@@ -43,6 +47,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.v("DONKEY", "Check if this is being created");
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -70,10 +75,17 @@ public class MainFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151); //Add a position
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney")); //Add the text on the markn
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
+
+    public void setUserMarker(LatLng latLng) {
+        if (userMarker == null){
+            userMarker = new MarkerOptions().position(latLng).title("Current Location");
+            mMap.addMarker(userMarker);
+            Log.v("DONKEY" , "Current location: " + latLng.latitude + " Long: " + latLng.longitude);
+        }
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 20));
+
     }
 
 }
